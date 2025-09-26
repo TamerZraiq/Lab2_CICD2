@@ -42,3 +42,7 @@ def delete_user(user_id: int):
     if any(u.user_id == user_id.user_id for u in users):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user_id not found")
     
+@app.get("/health")
+def health():
+    return "status: ok"
+
