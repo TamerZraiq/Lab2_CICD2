@@ -5,6 +5,7 @@ from .schemas import User
 app = FastAPI()
 users: list[User] = []
 
+
 @app.get("/api/users")
 def get_users():
     return users
