@@ -16,8 +16,13 @@ def test_duplicate_user_id_conflict(client):
  r = client.post("/api/users", json=user_payload(uid=2))
  assert r.status_code == 409 # duplicate id -> conflict
  assert "exists" in r.json()["detail"].lower()
-@pytest.mark.parametrize("bad_sid", ["BAD123", "s1234567", "S123", "S12345678"])
 
+@pytest.mark.parametrize("invalid_email", ["plainaddress", "test@", "@domain.com"])
+def test_bad_email_422(client, invalid_email):
+ r = client.post("/api/users", json=user_payload(uid=3, email=invalid_email))
+ assert r.status_code == 422 # pydantic validation error
+
+@pytest.mark.parametrize("bad_sid", ["BAD123", "s1234567", "S123", "S12345678"])
 def test_bad_student_id_422(client, bad_sid):
  r = client.post("/api/users", json=user_payload(uid=3, sid=bad_sid))
  assert r.status_code == 422 # pydantic validation error
